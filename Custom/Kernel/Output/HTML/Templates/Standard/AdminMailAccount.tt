@@ -339,7 +339,7 @@
 # Rother OSS / xoauth2
                         <label class="Mandatory" for="Auth"><span class="Marker">*</span> [% Translate("Authentication") | html %]:</label>
                         <div class="Field">
-                            [% Data.AuthOption %]                            
+                            [% Data.AuthOption %]
                             <div id="AuthAddError" class="TooltipErrorMessage">
                                 <p>[% Translate("This field is required.") | html %]</p>
                             </div>
@@ -369,7 +369,7 @@
                             [% Translate("Select the") | html %]
                             <a target="_blank" href="?Action=AdminOAuthTokenStore">OIDC</a>
                             [% Translate("Account to use for OAuth2 authentication.") | html %]
-                            </p>                            
+                            </p>
                             <div id="AccountAddError" class="TooltipErrorMessage">
                                 <p>[% Translate("This field is required.") | html %]</p>
                             </div>
