@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<otobo_config version="2.0" init="Application">
+
+    <Setting Name="SendmailModule::OAuth2FunctionalAccount" Required="0" Valid="0" ConfigLevel="200">
+        <Description Translatable="1">If 'XOAUTH2' or 'OAUTHBEARER' is selected in the 'SendmailModule::OAuth2Method' setting, then this setting needs to be enabled and set to a valid OIDC Functional Account. OIDC Accounts can be configured in the Admin UI 'OAuth Functional Accounts' Module.</Description>
+        <Navigation>Core::Email</Navigation>
+        <Value>
+            <Item ValueType="String" ValueRegex="">FunctionalAccount</Item>
+        </Value>
+    </Setting>
+    <Setting Name="SendmailModule::OAuth2Method" Required="0" Valid="1" ConfigLevel="200">
+        <Description Translatable="1">The authentication method to use for SMTP Authenticatio, defaults to 'Basic Auth'. If 'XOAUTH2' or 'OAUTHBEARER' is selected, then the '"SendmailModule::OAuth2FunctionalAccount' setting needs to be enabled and set to a valid OIDC Functional Account. OIDC Accounts can be configured in the Admin UI  'OAuth Functional Accounts' Module.</Description>
+        <Navigation>Core::Email</Navigation>
+        <Value>
+            <Item ValueType="Select" SelectedID="Basic">
+                <Item ValueType="Option" Value="Basic" Translatable="1">Basic Auth</Item>
+                <Item ValueType="Option" Value="XOAUTH2" Translatable="1">XOAUTH2</Item>
+                <Item ValueType="Option" Value="OAUTHBEARER" Translatable="1">OAUTHBEARER</Item>
+            </Item>
+        </Value>
+    </Setting>
+</otobo_config>

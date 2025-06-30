@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<otobo_package version="1.0">
+    <Name>OAuth2-Mail</Name>
+    <Version>0.0.0</Version>
+    <Framework>11.0.x</Framework>
+    <Vendor>Rother OSS GmbH</Vendor>
+    <URL>https://otobo.io/</URL>
+    <License>GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007</License>
+    <Description Lang="en">Email sending (SMTP) and Email fetching (POP3/IMAP) using XOAUTH2/OAUTHBEARER.</Description>
+    <Filelist>
+        <File Permission="660" Location="var/httpd/htdocs/js/Core.Agent.Admin.MailAccount.js" />
+        <File Permission="660" Location="Custom/Kernel/Modules/AdminMailAccount.pm" />
+        <File Permission="660" Location="Custom/Kernel/System/MailAccount.pm" />
+        <File Permission="660" Location="Custom/Kernel/System/MailAccount/IMAP.pm" />
+        <File Permission="660" Location="Custom/Kernel/System/MailAccount/IMAPS.pm" />
+        <File Permission="660" Location="Custom/Kernel/System/MailAccount/IMAPTLS.pm" />
+        <File Permission="660" Location="Custom/Kernel/System/MailAccount/POP3.pm" />
+        <File Permission="660" Location="Custom/Kernel/System/MailAccount/POP3S.pm" />
+        <File Permission="660" Location="Custom/Kernel/System/MailAccount/POP3TLS.pm" />
+        <File Permission="660" Location="Custom/Kernel/System/Email/SMTP.pm" />
+        <File Permission="660" Location="Custom/Kernel/Output/HTML/Templates/Standard/AdminMailAccount.tt" />
+        <File Permission="660" Location="Kernel/Config/Files/XML/OAuth2Mail.xml" />
+        <File Permission="660" Location="Kernel/System/OpenIDConnect/xoauth.pm" />
+        <File Permission="660" Location="scripts/test/MailAccount.t" />
+    </Filelist>
+    <DatabaseInstall>
+        <TableAlter Name="mail_account">
+            <ColumnAdd Name="auth" Type="VARCHAR" Size="20" Required="true" Default="Basic" />
+            <ColumnAdd Name="functional_account_id" Type="INTEGER" Required="false" />
+        </TableAlter>
+    </DatabaseInstall>
+
+    <DatabaseUninstall>
+        <TableAlter Name="mail_account">
+            <ColumnDrop Name="auth" />
+            <ColumnDrop Name="functional_account_id" />
+        </TableAlter>
+    </DatabaseUninstall>
+
+</otobo_package>
