@@ -181,6 +181,7 @@ sub Check {
     # use smtp auth if configured
 
 # Rother OSS / xoauth2
+#    if ( $Self->{User} && $Self->{Password} ) {
     if ( $Self->{Auth} ne 'Basic' ) {
 
         my $AccountName = $ConfigObject->Get('SendmailModule::OAuth2FunctionalAccount');
@@ -206,7 +207,7 @@ sub Check {
                 ObjectLogType => 'Connection',
                 Priority      => 'Error',
                 Key           => 'Kernel::System::Email::SMTP',
-                Value         => "SMTP authentication vis XOauth2 failed invalid Token (ErrorMessage: " . $Token->{Error} . ").",
+                Value         => "SMTP authentication via XOauth2 failed invalid Token (ErrorMessage: " . $Token->{Error} . ").",
             );
 
             return $ReturnError->(
@@ -235,10 +236,8 @@ sub Check {
             );
         }
     }
-
-# if ( $Self->{User} && $Self->{Password} ) {
-# EO xoauth2
     elsif ( $Self->{User} && $Self->{Password} ) {
+# EO xoauth2
 
         $Param{CommunicationLogObject}->ObjectLog(
             ObjectLogType => 'Connection',

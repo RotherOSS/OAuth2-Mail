@@ -326,7 +326,7 @@ sub MailAccountGet {
     return if !$DBObject->Prepare(
         SQL =>
 
-# Rother OSS / xoau6th2
+# Rother OSS / xoauth2
 #            'SELECT login, pw, host, account_type, queue_id, imap_folder, trusted, comments, valid_id, '
 #            . ' create_time, change_time FROM mail_account WHERE id = ?',
             'SELECT ma.login, ma.pw, ma.host, ma.account_type, ma.queue_id, ma.imap_folder, ma.trusted, ma.comments, ma.valid_id, '
@@ -334,7 +334,7 @@ sub MailAccountGet {
             . ' FROM mail_account ma '
             . ' LEFT JOIN oidc_functional_accounts ofa ON ma.functional_account_id = ofa.id '
             . '  WHERE ma.id = ?',
-# EO exoauth2
+# EO xoauth2
         Bind => [ \$Param{ID} ],
     );
 
