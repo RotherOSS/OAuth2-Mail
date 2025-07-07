@@ -128,6 +128,15 @@ sub MailAccountAdd {
 
         $Param{Password} = '';
     }
+    else {
+        if ( !$Param{Password} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need Password!"
+            );
+            return;
+        }        
+    }
 # EO xoauth2
 
     # check if dispatching is by From
@@ -183,8 +192,12 @@ sub MailAccountAdd {
     );
 
     return if !$DBObject->Prepare(
+# Rother OSS / xoauth2
+#        SQL  => 'SELECT id FROM mail_account WHERE login = ? AND host = ? AND account_type = ? ',
+#        Bind => [ \$Param{Login}, \$Param{Host}, \$Param{Type} ],
         SQL  => 'SELECT id FROM mail_account WHERE login = ? AND host = ? AND account_type = ? AND auth = ? ',
         Bind => [ \$Param{Login}, \$Param{Host}, \$Param{Type}, \$AuthType ],
+# EO xoauth2
     );
 
     my $ID;
@@ -201,7 +214,10 @@ returns an array of all mail account data
 
     my @MailAccounts = $MailAccount->MailAccountGetAll();
 
+# Rother OSS / xoauth2
+# (returns list of the fields for each account: ID, Login, Password, Host, Type, QueueID, Trusted, IMAPFolder, Comment, DispatchingBy, ValidID )
 (returns list of the fields for each account: ID, Login, Password, Host, Type, QueueID, Trusted, IMAPFolder, Comment, DispatchingBy, ValidID, Auth, FunctionalAccountName )
+# EO xoauth2
 
 
 =cut
@@ -441,6 +457,16 @@ sub MailAccountUpdate {
         return if !$OAuth2AccountID;
 
         $Param{Password} = '';
+    }
+    else {
+
+        if ( !$Param{Password} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need Password!"
+            );
+            return;
+        }
     }
 # EO xoauth2
 
@@ -795,9 +821,9 @@ sub _GetOIDCAccountID {
         return;
     }
 
-    my $FunctionalAccounts = $Kernel::OM->Get('Kernel::System::OpenIDConnect::FunctionalAccounts');
+    my $FunctionalAccountsObject = $Kernel::OM->Get('Kernel::System::OpenIDConnect::FunctionalAccounts');
 
-    my $OAuth2Account = $FunctionalAccounts->GetAccount(
+    my $OAuth2Account = $FunctionalAccountsObject->GetAccount(
         Name => $Param{AccountName}
     );
 

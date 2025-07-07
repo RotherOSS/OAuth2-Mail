@@ -1,0 +1,8 @@
+doc/content/conf.py
+doc/config/
+doc/doctrees/
+doc/latex/
+doc/_static
+doc/_templates
+doc/make.bat
+doc/Makefile

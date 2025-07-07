@@ -14,7 +14,7 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 # --
 
-package Kernel::System::OpenIDConnect::xoauth;
+package Kernel::System::OpenIDConnect::OAuth2MailExtensions;
 
 use v5.24;
 use strict;
@@ -122,13 +122,5 @@ sub ImapClientOAuth2 {
 
     return $Result;
 }
-
-# monkey patch
-
-no warnings('once');    ## no critic qw(TestingAndDebugging::ProhibitNoWarnings)
-
-*Net::Cmd::Otobo_OAuth2          = \&NetCmdOAuth2;
-*Net::IMAP::Simple::Otobo_OAuth2 = \&ImapSimpleOAuth2;
-*Mail::IMAPClient::Otobo_OAuth2  = \&ImapClientOAuth2;
 
 1;

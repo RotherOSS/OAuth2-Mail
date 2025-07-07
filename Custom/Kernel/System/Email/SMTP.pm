@@ -29,7 +29,15 @@ use Net::SMTP;
 
 # OTOBO modules
 # Rother OSS / xoauth2
-use Kernel::System::OpenIDConnect::xoauth;
+use Kernel::System::OpenIDConnect::OAuth2MailExtensions;
+
+no warnings('once');    ## no critic qw(TestingAndDebugging::ProhibitNoWarnings)
+
+# monkey patch support for XOAUTH2/OAUTHBEARER into Net::Cmd
+*Net::Cmd::Otobo_OAuth2 = \&Kernel::System::OpenIDConnect::OAuth2MailExtensions::NetCmdOAuth2;
+
+use warnings('once');
+
 # EO xoauth2
 
 our @ObjectDependencies = (
@@ -185,6 +193,13 @@ sub Check {
 
         my $AccountName = $ConfigObject->Get('SendmailModule::OAuth2FunctionalAccount');
 
+        if(!$AccountName) {
+            return $ReturnError->(
+                ErrorMessage => "SMTP authentication failed: missing AccountName!",
+                Code         => '0',
+            );        
+        }
+
         $Param{CommunicationLogObject}->ObjectLog(
             ObjectLogType => 'Connection',
             Priority      => 'Debug',
@@ -192,9 +207,9 @@ sub Check {
             Value         => "Using SMTP authentication with XOAuth account $AccountName using '$Self->{Auth}'.",
         );
 
-        my $TokenProvider = $Kernel::OM->Get('Kernel::System::OpenIDConnect::TokenProvider');
+        my $TokenProviderObject = $Kernel::OM->Get('Kernel::System::OpenIDConnect::TokenProvider');
 
-        my $Token = $TokenProvider->Fetch(
+        my $Token = $TokenProviderObject->Fetch(
             AccountName => $AccountName,
         );
 

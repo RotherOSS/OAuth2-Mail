@@ -9,7 +9,7 @@
         </Value>
     </Setting>
     <Setting Name="SendmailModule::OAuth2Method" Required="0" Valid="1" ConfigLevel="200">
-        <Description Translatable="1">The authentication method to use for SMTP Authenticatio, defaults to 'Basic Auth'. If 'XOAUTH2' or 'OAUTHBEARER' is selected, then the '"SendmailModule::OAuth2FunctionalAccount' setting needs to be enabled and set to a valid OIDC Functional Account. OIDC Accounts can be configured in the Admin UI  'OAuth Functional Accounts' Module.</Description>
+        <Description Translatable="1">The authentication method to use for SMTP Authentication, defaults to 'Basic Auth'. If 'XOAUTH2' or 'OAUTHBEARER' is selected, then the '"SendmailModule::OAuth2FunctionalAccount' setting needs to be enabled and set to a valid OIDC Functional Account. OIDC Accounts can be configured in the Admin UI  'OAuth Functional Accounts' Module.</Description>
         <Navigation>Core::Email</Navigation>
         <Value>
             <Item ValueType="Select" SelectedID="Basic">

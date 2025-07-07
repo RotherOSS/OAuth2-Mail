@@ -227,9 +227,11 @@
                             </div>
                         </div>
                         <div class="Clear"></div>
-# EO xoauth2
+#                       <label class="Mandatory" for="PasswordAdd"><span class="Marker">*</span> [% Translate("Password") | html %]:</label>
+#                       <div class="Field">
                         <label class="Mandatory MailPassword" for="PasswordAdd"><span class="Marker">*</span> [% Translate("Password") | html %]:</label>
                         <div class="Field MailPassword">
+# EO xoauth2
                             <input type="password" class="W50pc MailPassword Validate_Required [% Data.PasswordAddInvalid | html %]" name="Password" id="PasswordAdd" value="" maxlength="200" autocomplete="off" />
                             <div id="PasswordAddError" class="TooltipErrorMessage">
                                 <p>[% Translate("This field is required.") | html %]</p>
@@ -361,9 +363,12 @@
                         </div>
                         <div class="Clear"></div>
 
-# Rother OSS / xoauth2
+#                       <label class="Mandatory" for="AccountName"><span class="Marker">*</span> [% Translate("OIDC Account") | html %]:</label>
+#                       <div class="Field">
+
                         <label class="Mandatory MailAccount" for="AccountName"><span class="Marker">*</span> [% Translate("OIDC Account") | html %]:</label>
                         <div class="Field MailAccount">
+# Rother OSS / xoauth2
                             [% Data.AccountOption %]
                             <p class="FieldExplanation">
                             [% Translate("Select the") | html %]

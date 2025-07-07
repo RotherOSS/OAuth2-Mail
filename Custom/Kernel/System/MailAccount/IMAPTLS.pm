@@ -30,7 +30,15 @@ use IO::Socket::SSL  ();
 
 # OTOBO modules
 # Rother OSS / xoauth2
-use Kernel::System::OpenIDConnect::xoauth;
+use Kernel::System::OpenIDConnect::OAuth2MailExtensions;
+
+no warnings('once');    ## no critic qw(TestingAndDebugging::ProhibitNoWarnings)
+
+# monkey patch support for XOAUTH2/OAUTHBEARER into Mail::IMAPClient
+*Mail::IMAPClient::Otobo_OAuth2  = \&Kernel::System::OpenIDConnect::OAuth2MailExtensions::ImapClientOAuth2;
+
+use warnings('once');
+
 # EO xoauth2
 
 use Kernel::System::PostMaster ();
@@ -58,7 +66,7 @@ sub Connect {
     # check needed stuff
 # Rother OSS / xoauth2
 #   for (qw(Login Password Host Timeout Debug)) {
-    for (qw(Login Host Timeout Debug)) {
+    for (qw(Login Host Timeout Debug Auth)) {
 # EO xoauth2
         if ( !defined $Param{$_} ) {
             return (
@@ -71,15 +79,23 @@ sub Connect {
     my $Type          = 'IMAPTLS';
     my $SSLVerifyMode = $Kernel::OM->Get('Kernel::Config')->Get('PostMasterSSLVerifyMode') // IO::Socket::SSL::SSL_VERIFY_NONE();
 
+# Rother OSS / xoauth2
+
     my $Auth        = $Param{Auth};
     my $AccountName = $Param{AccountName};
 
-# Rother OSS / xoauth2
     if ( $Auth ne 'Basic' ) {
 
-        my $TokenProvider = $Kernel::OM->Get('Kernel::System::OpenIDConnect::TokenProvider');
+        if ( !defined $AccountName ) {
+            return (
+                Successful => 0,
+                Message    => "Need AccountName!",
+            );
+        }
 
-        my $Token = $TokenProvider->Fetch(
+        my $TokenProviderObject = $Kernel::OM->Get('Kernel::System::OpenIDConnect::TokenProvider');
+
+        my $Token = $TokenProviderObject->Fetch(
             AccountName => $AccountName,
         );
 
@@ -129,38 +145,44 @@ sub Connect {
             Message    => "ImapTLS: Can't connect to $Param{Host}: $@\n"
         );
     }
-    else {
-# EO xoauth2
 
-        # connect to host
-        # The initial socket is IO::Socket::IP or IO::Socket::INET.
-        # Later the socket will be upgraded to IO::Socket::SSL.
-        my $IMAPObject = Mail::IMAPClient->new(
-            Server   => $Param{Host},
-            User     => $Param{Login},
-            Password => $Param{Password},
-            Starttls => [
-                SSL_verify_mode => $SSLVerifyMode,
-            ],
-            Debug => $Param{Debug},
-            Uid   => 1,
-
-            # see bug#8791: needed for some Microsoft Exchange backends
-            Ignoresizeerrors => 1,
-        );
-
-        # looks good
-        return (
-            Successful => 1,
-            IMAPObject => $IMAPObject,
-        ) if $IMAPObject;
-
-        # report failure
+    if ( !defined $Param{Password} ) {
         return (
             Successful => 0,
-            Message    => "$Type: Can't connect to $Param{Host}: $@\n"
+            Message    => "Need Password!",
         );
     }
+
+# EO xoauth2
+
+    # connect to host
+    # The initial socket is IO::Socket::IP or IO::Socket::INET.
+    # Later the socket will be upgraded to IO::Socket::SSL.
+    my $IMAPObject = Mail::IMAPClient->new(
+        Server   => $Param{Host},
+        User     => $Param{Login},
+        Password => $Param{Password},
+        Starttls => [
+            SSL_verify_mode => $SSLVerifyMode,
+        ],
+        Debug => $Param{Debug},
+        Uid   => 1,
+
+        # see bug#8791: needed for some Microsoft Exchange backends
+        Ignoresizeerrors => 1,
+    );
+
+    # looks good
+    return (
+        Successful => 1,
+        IMAPObject => $IMAPObject,
+    ) if $IMAPObject;
+
+    # report failure
+    return (
+        Successful => 0,
+        Message    => "$Type: Can't connect to $Param{Host}: $@\n"
+    );
 }
 
 sub Fetch {
@@ -286,11 +308,11 @@ sub _Fetch {
             Host  => $Param{Host},
             Login => $Param{Login},
 
-            # Rother OSS / xoauth2
+# Rother OSS / xoauth2
             Auth        => $Param{Auth},
             AccountName => $Param{AccountName},
 
-            # EO xaouth2
+# EO xaouth2
             Password => $Param{Password},
             Timeout  => $Timeout,
             Debug    => $Debug,

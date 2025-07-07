@@ -30,7 +30,15 @@ use Net::IMAP::Simple ();
 # OTOBO modules
 
 # Rother OSS / xoauth2
-use Kernel::System::OpenIDConnect::xoauth;
+use Kernel::System::OpenIDConnect::OAuth2MailExtensions;
+
+no warnings('once');    ## no critic qw(TestingAndDebugging::ProhibitNoWarnings)
+
+# monkey patch support for XOAUTH2/OAUTHBEARER into Net::IMAP::Simple
+*Net::IMAP::Simple::Otobo_OAuth2 = \&Kernel::System::OpenIDConnect::OAuth2MailExtensions::ImapSimpleOAuth2;
+
+use warnings('once');
+
 # EO xoauth2
 
 our @ObjectDependencies = (
@@ -66,9 +74,16 @@ sub Authenticate {
 
     if ( $Auth ne 'Basic' ) {
 
-        my $TokenProvider = $Kernel::OM->Get('Kernel::System::OpenIDConnect::TokenProvider');
+        if( !$AccountName ) {
+            return (
+                Successful => 0,
+                Message    => "$Type: Auth using $Auth missing AccountName",
+            );        
+        }
 
-        my $Token = $TokenProvider->Fetch(
+        my $TokenProviderObject = $Kernel::OM->Get('Kernel::System::OpenIDConnect::TokenProvider');
+
+        my $Token = $TokenProviderObject->Fetch(
             AccountName => $AccountName,
         );
 
@@ -104,6 +119,13 @@ sub Authenticate {
     }
     else {
 
+        if( !$Param{Password} ) {
+            return (
+                Successful => 0,
+                Message    => "$Type: Auth using $Auth missing Password",
+            );        
+        }
+
         my $NOM = $IMAPObject->login( $Param{Login}, $Param{Password} );
         if ( !defined $NOM ) {
             $IMAPObject->quit();
@@ -130,7 +152,7 @@ sub Connect {
     # check needed stuff
 # Rother OSS / xoauth2
 #    for (qw(Login Password Host Timeout Debug)) {
-    for (qw(Login Host Timeout Debug)) {
+    for (qw(Login Host Timeout Debug Auth)) {
 # EO xoauth2
         if ( !defined $Param{$_} ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
@@ -233,7 +255,7 @@ sub _Fetch {
     # check needed stuff
 # Rother OSS / xoauth2
 #   for (qw(Login Password Host Trusted QueueID)) {
-    for (qw(Login Host Trusted QueueID)) {
+    for (qw(Login Host Trusted QueueID Auth)) {
 # EO xoauth2
         if ( !defined $Param{$_} ) {
             $CommunicationLogObject->ObjectLog(
@@ -254,7 +276,7 @@ sub _Fetch {
 
 # Rother OSS / xoauth2
 #   for (qw(Login Password Host)) {
-    for (qw(Login Host)) {
+    for (qw(Login Host Auth)) {
 # EO xoauth2
         if ( !$Param{$_} ) {
             $CommunicationLogObject->ObjectLog(

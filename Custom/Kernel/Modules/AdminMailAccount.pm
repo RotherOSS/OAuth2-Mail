@@ -484,10 +484,10 @@ sub _MaskUpdateMailAccount {
         Class      => 'Modernize Validate_Required MailAuth' . ( $Param{Errors}->{'AuthEditInvalid'} || '' ),
     );
 
-    my $FunctionalAccounts = $Kernel::OM->Get('Kernel::System::OpenIDConnect::FunctionalAccounts');
+    my $FunctionalAccountsObject = $Kernel::OM->Get('Kernel::System::OpenIDConnect::FunctionalAccounts');
 
     my @OAuthAccountNames;
-    my $OAuthAccounts = $FunctionalAccounts->GetAccounts();
+    my $OAuthAccounts = $FunctionalAccountsObject->GetAccounts();
 
     for my $Account (@$OAuthAccounts) {
         push @OAuthAccountNames, $Account->{Name};
@@ -582,10 +582,10 @@ sub _MaskAddMailAccount {
         Class      => 'Modernize Validate_Required MailAuth' . ( $Param{Errors}->{'AuthAddInvalid'} || '' ),
     );
 
-    my $FunctionalAccounts = $Kernel::OM->Get('Kernel::System::OpenIDConnect::FunctionalAccounts');
+    my $FunctionalAccountsObject = $Kernel::OM->Get('Kernel::System::OpenIDConnect::FunctionalAccounts');
 
     my @OAuthAccountNames;
-    my $OAuthAccounts = $FunctionalAccounts->GetAccounts();
+    my $OAuthAccounts = $FunctionalAccountsObject->GetAccounts();
 
     for my $Account (@$OAuthAccounts) {
         push @OAuthAccountNames, $Account->{Name};

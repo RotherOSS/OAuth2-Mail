@@ -29,7 +29,15 @@ use Net::POP3;
 # OTOBO modules
 
 # Rother OSS / xoauth2
-use Kernel::System::OpenIDConnect::xoauth;
+use Kernel::System::OpenIDConnect::OAuth2MailExtensions;
+
+no warnings('once');    ## no critic qw(TestingAndDebugging::ProhibitNoWarnings)
+
+# monkey patch support for XOAUTH2/OAUTHBEARER into Net::Cmd
+*Net::Cmd::Otobo_OAuth2 = \&Kernel::System::OpenIDConnect::OAuth2MailExtensions::NetCmdOAuth2;
+
+use warnings('once');
+
 # EO xoauth2
 
 our @ObjectDependencies = (
@@ -69,9 +77,9 @@ sub Authenticate {
 
     if ( $Auth ne 'Basic' ) {
 
-        my $TokenProvider = $Kernel::OM->Get('Kernel::System::OpenIDConnect::TokenProvider');
+        my $TokenProviderObject = $Kernel::OM->Get('Kernel::System::OpenIDConnect::TokenProvider');
 
-        my $Token = $TokenProvider->Fetch(
+        my $Token = $TokenProviderObject->Fetch(
             AccountName => $AccountName,
         );
 
@@ -133,7 +141,7 @@ sub Connect {
     # check needed stuff
 # Rother OSS / xoauth2
 #    for (qw(Login Password Host Timeout Debug)) {
-    for (qw(Login Host Timeout Debug)) {
+    for (qw(Login Host Timeout Debug Auth)) {
 # EO xoauth2
         if ( !defined $Param{$_} ) {
             return (
@@ -142,6 +150,28 @@ sub Connect {
             );
         }
     }
+
+# Rother OSS / xoauth2
+    if ( $Param{Auth} ne 'Basic' ) {
+
+        if ( !defined $Param{AccountName} ) {
+            return (
+                Successful => 0,
+                Message    => "Need AccountName!",
+            );
+        }
+    }
+    else {
+
+        if ( !defined $Param{Password} ) {
+            return (
+                Successful => 0,
+                Message    => "Need Password!",
+            );
+        }
+    }
+# EO xoauth2
+
 
     my $Type = 'POP3';
 
@@ -241,7 +271,7 @@ sub Fetch {
     }
 
 # Rother OSS / xoauth2
-#   for (qw(Login HPassword ost)) {
+#   for (qw(Login Password Host)) {
     for (qw(Login Host)) {
 # EO xoauth2
         if ( !$Param{$_} ) {
