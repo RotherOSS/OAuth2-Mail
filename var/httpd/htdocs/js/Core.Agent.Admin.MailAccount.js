@@ -93,12 +93,14 @@ Core.Agent.Admin = Core.Agent.Admin || {};
         if(Auth == 'Basic') {
 
             $('.MailPassword').css('display', 'block').addClass('Validate_Required');
-            $('.MailAccount').css('display', 'none').removeClass('Validate_Required');
+            $('.MailAccount').css('display','none');
+            $('#AccountName').removeClass('Validate_Required');
         }
         else {
-
+            
             $('.MailPassword').css('display', 'none').removeClass('Validate_Required');
-            $('.MailAccount').css('display', 'block').addClass('Validate_Required');
+            $('.MailAccount').css('display', 'block');
+            $('#AccountName').addClass('Validate_Required');
         }
     };
 // EO xoauth2
