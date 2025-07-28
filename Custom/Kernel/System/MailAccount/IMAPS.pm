@@ -57,7 +57,7 @@ sub Connect {
     my $IMAPObject = Net::IMAP::Simple->new(
         $Param{Host},
         timeout     => $Param{Timeout},
-        debug       => $Param{Debug},
+        debug       => $Param{Debug}, # use something like 'file:/opt/otobo/var/log/imap.log' to log into that file
         use_ssl     => 1,
         ssl_options => [
             SSL_verify_mode => $SSLVerifyMode,
