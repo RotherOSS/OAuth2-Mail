@@ -6,7 +6,8 @@
     <Vendor>Rother OSS GmbH</Vendor>
     <URL>https://otobo.io/</URL>
     <License>GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007</License>
-    <Description Lang="en">Email sending (SMTP) and Email fetching (POP3/IMAP) using XOAUTH2/OAUTHBEARER.</Description>
+    <Description Lang="en">Email sending (SMTP) and email fetching (POP3/IMAP) using XOAUTH2/OAUTHBEARER.</Description>
+    <Description Lang="hu">E-mail-küldés (SMTP) és e-mail-lekérés (POP3/IMAP) XOAUTH2/OAUTHBEARER használatával.</Description>
     <Filelist>
         <File Permission="660" Location="var/httpd/htdocs/js/Core.Agent.Admin.MailAccount.js" />
         <File Permission="660" Location="Custom/Kernel/Modules/AdminMailAccount.pm" />

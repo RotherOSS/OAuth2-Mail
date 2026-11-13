@@ -7,7 +7,7 @@ Sacrifice to Sphinx
 
 Description
 ===========
-Email sending (SMTP) and Email fetching (POP3/IMAP) using XOAUTH2/OAUTHBEARER.
+Email sending (SMTP) and email fetching (POP3/IMAP) using XOAUTH2/OAUTHBEARER.
 
 System requirements
 ===================
